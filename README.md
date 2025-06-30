@@ -1,4 +1,3 @@
-# Angular Velosity sensor
+# Angular Velocity sensor
 
-Determinae angualr velosity (W) using a mageneric sensor.
-
+Calculate angular velocity (W) with a magnetic sensor.
