@@ -3,6 +3,9 @@
 #include <Ewma.h>
 #include <math.h>
 
+const int DEFAULT_ALPHA = 0.8;
+const int DEFAULT_DEAD_ZONE = 0.45;
+
 class WCalculator
 {
 
@@ -16,8 +19,8 @@ private:
 
 public:
   WCalculator(
-      double alpha = 0.8,
-      float deadZone = 0.45) : filter(new Ewma(alpha)), deadZone(deadZone)
+      double alpha = DEFAULT_ALPHA,
+      float deadZone = DEFAULT_DEAD_ZONE) : filter(new Ewma(alpha)), deadZone(deadZone)
   {
   }
 
