@@ -2,37 +2,31 @@
 #include <MagneticEncoder.h>
 #include <WCalculator.h>
 
-const int SDA_PIN = 20;
-const int SCL_PIN = 21;
+const int I2C_SDA = 21;
+const int I2C_SCL = 22;
 const int SAMPLE_INTERVAL_MS = 50;
-const int FILTER_ALPHA = 0.6;
+const float EWMA_ALPHA = 0.6;
 
-WCalculator *wCalculator = new WCalculator(FILTER_ALPHA);
+WCalculator *wCalculator = new WCalculator(EWMA_ALPHA);
 
-void readValue(int value,
-                   float valueDiff,
-                   float deltaTimeMs)
+void onUpdate(int value,
+              float valueDiff,
+              float deltaTimeMs)
 {
     Serial.print(">w:");
     Serial.println(wCalculator->getWInRadBySec(valueDiff, deltaTimeMs));
 }
 
-AS5600Sensor *sensor = new AS5600Sensor(
-    SDA_PIN,
-    SCL_PIN,
-    DEFAULT_ADDRESS);
-
 MagneticEncoder *encoder = new MagneticEncoder(
-    sensor,
-    readValue,
+    new AS5600Sensor(I2C_SDA, I2C_SCL),
+    onUpdate,
     SAMPLE_INTERVAL_MS);
+
 
 void setup()
 {
-    Serial.begin(115200);
-    while (!Serial && millis() < 5000)
-        ;
-
+    Serial.begin(9600);
+    while (!Serial && millis() < 5000);
     encoder->begin();
 }
 

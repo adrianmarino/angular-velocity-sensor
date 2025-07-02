@@ -3,7 +3,7 @@
 #include <Arduino.h> // Necesario para millis() y Serial.println()
 #include <math.h>    // Necesario para abs()
 
-typedef void (*ReadCallback)(int value, float valueDiff, float deltaTimeMs);
+typedef void (*OnUpdateWEvent)(int value, float valueDiff, float deltaTimeMs);
 
 const int DEFAULT_THRESHOULD = 1; // Umbral por defecto: 1 unidad cruda (aprox. 0.087 grados)
                                   // Este umbral se aplica al cambio de ángulo crudo.
@@ -21,17 +21,17 @@ private:
   unsigned long sampleIntervalMs;     // Intervalo de muestreo deseado en milisegundos
   uint16_t valueChangeThreshold;      // Umbral de cambio en unidades crudas para activar el callback
 
-  ReadCallback callback; // Función a llamar cuando la velocidad angular cambia
+  OnUpdateWEvent onUpdateEvent; // Función a llamar cuando la velocidad angular cambia
 
 public:
   // Constructor de la clase MagneticEncoder
   MagneticEncoder(
       AS5600Sensor *sensor,
-      ReadCallback cb, // Ahora espera un callback para int (valor crudo) y float (velocidad angular)
+      OnUpdateWEvent cb, // Ahora espera un callback para int (valor crudo) y float (velocidad angular)
       unsigned long sampleIntervalMs = DEFAULT_SAMPLE_INTERVAL_MS,
       uint16_t threshold = DEFAULT_THRESHOULD) : sensor(sensor), // Inicializa el puntero al sensor
                                                  sampleIntervalMs(sampleIntervalMs),
-                                                 callback(cb), // Asigna la nueva función de callback
+                                                 onUpdateEvent(cb), // Asigna la nueva función de callback
                                                  valueChangeThreshold(threshold),
                                                  previousRawValue(0), // Inicializa el valor anterior a 0
                                                  previousUpdateTimeMs(0)
@@ -82,7 +82,7 @@ public:
         // Calcula la diferencia de tiempo en milisegundos
         unsigned long deltaTimeMs = currentTimeMs - previousUpdateTimeMs;
 
-        callback(currentRawValue, diffRaw, deltaTimeMs);
+        onUpdateEvent(currentRawValue, diffRaw, deltaTimeMs);
 
         // Actualiza los valores anteriores para la próxima iteración,
         // independientemente de si se superó el umbral. Esto asegura que

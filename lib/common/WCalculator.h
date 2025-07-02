@@ -34,14 +34,14 @@ public:
     if (deltaTimeMs <= 0)
       return 0.0f;
 
-    // Convierte el delta de tiempo a segundos
-    float deltaTimeInSec = deltaTimeMs / 1000.0f;
-
     // Convierte la diferencia de unidades crudas a radianes
     float deltaRadians = valueDiff * RAW_TO_RADIANS;
 
+    // Convierte el delta time a segundos
+    float deltaTimeSec = deltaTimeMs / 1000.0f;
+
     // Calcula la velocidad angular en radianes por segundo
-    float wInRadBySec = deltaRadians / deltaTimeInSec;
+    float wInRadBySec = deltaRadians / deltaTimeSec;
 
     wInRadBySec = filter->filter(wInRadBySec);
 
