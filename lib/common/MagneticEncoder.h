@@ -33,17 +33,18 @@ public:
       int sdaPin,
       int sclPin,
       OnUpdateWEvent cb, // Ahora espera un callback para int (valor crudo) y float (velocidad angular)
+      int address = DEFAULT_ADDRESS,
       unsigned long sampleIntervalMs = DEFAULT_SAMPLE_INTERVAL_MS,
       double alpha = DEFAULT_ALPHA,
       float deadZone = DEFAULT_DEAD_ZONE,
       uint16_t threshold = DEFAULT_THRESHOULD) : sensor(sensor), // Inicializa el puntero al sensor
-                                                     sampleIntervalMs(sampleIntervalMs),
-                                                     onUpdateEvent(cb), // Asigna la nueva función de callback
-                                                     valueChangeThreshold(threshold),
-                                                     previousStep(0), // Inicializa el valor anterior a 0
-                                                     previousUpdateTimeMs(0)
+                                                 sampleIntervalMs(sampleIntervalMs),
+                                                 onUpdateEvent(cb), // Asigna la nueva función de callback
+                                                 valueChangeThreshold(threshold),
+                                                 previousStep(0), // Inicializa el valor anterior a 0
+                                                 previousUpdateTimeMs(0)
   {
-    sensor = new AS5600Sensor(sdaPin, sclPin);
+    sensor = new AS5600Sensor(sdaPin, sclPin, address);
     wCalculator = new WCalculator(alpha, deadZone);
   }
 

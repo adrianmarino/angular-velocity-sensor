@@ -12,7 +12,7 @@ private:
     int sdaPin;
     int sclPin;
     int value;
-    const int address;
+    int address;
     uint32_t i2cFreq;
 
 public:

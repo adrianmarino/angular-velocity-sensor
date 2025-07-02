@@ -1,5 +1,4 @@
 #include <MagneticEncoder.h>
-#include <WCalculator.h>
 
 const int I2C_SDA = 21;
 const int I2C_SCL = 22;
@@ -20,7 +19,13 @@ void setup()
     Serial.begin(9600);
     while (!Serial && millis() < 5000);
 
-    encoder = new MagneticEncoder(I2C_SDA, I2C_SCL, onUpdate, SAMPLE_INTERVAL_MS, EWMA_ALPHA);
+    encoder = new MagneticEncoder(
+        I2C_SDA,
+        I2C_SCL,
+        onUpdate,
+        DEFAULT_ADDRESS,
+        SAMPLE_INTERVAL_MS,
+        EWMA_ALPHA);
 
     encoder->begin();
 }

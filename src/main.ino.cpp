@@ -1,8 +1,7 @@
-# 1 "/var/tmp/tmpgtarhf5e"
+# 1 "/var/tmp/tmpcbdieh5s"
 #include <Arduino.h>
 # 1 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
 #include <MagneticEncoder.h>
-#include <WCalculator.h>
 
 const int I2C_SDA = 21;
 const int I2C_SCL = 22;
@@ -11,7 +10,7 @@ const float EWMA_ALPHA = 0.6;
 void onUpdate(int step, float w);
 void setup();
 void loop();
-#line 9 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
+#line 8 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
 void onUpdate(int step, float w)
 {
     Serial.print(">Step:");
@@ -26,7 +25,13 @@ void setup()
     Serial.begin(9600);
     while (!Serial && millis() < 5000);
 
-    encoder = new MagneticEncoder(I2C_SDA, I2C_SCL, onUpdate, SAMPLE_INTERVAL_MS, EWMA_ALPHA);
+    encoder = new MagneticEncoder(
+        I2C_SDA,
+        I2C_SCL,
+        onUpdate,
+        DEFAULT_ADDRESS,
+        SAMPLE_INTERVAL_MS,
+        EWMA_ALPHA);
 
     encoder->begin();
 }
