@@ -1,3 +1,6 @@
+# 1 "/var/tmp/tmpnl7hmqk2"
+#include <Arduino.h>
+# 1 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
 #include <AS5600Sensor.h>
 #include <MagneticEncoder.h>
 #include <WCalculator.h>
@@ -8,7 +11,12 @@ const int SAMPLE_INTERVAL_MS = 50;
 const int FILTER_ALPHA = 0.6;
 
 WCalculator *wCalculator = new WCalculator(FILTER_ALPHA);
-
+void readValue(int value,
+                   float valueDiff,
+                   float deltaTimeMs);
+void setup();
+void loop();
+#line 12 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
 void readValue(int value,
                    float valueDiff,
                    float deltaTimeMs)

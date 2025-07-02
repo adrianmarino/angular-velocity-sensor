@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 const int ERROR_VALUE = 0xFFFF;
-const int DEFAULT_ADRESSS = 0x36;         // Dirección I2C del AS5600
+const int DEFAULT_ADDRESS = 0x36;         // Dirección I2C del AS5600
 const uint32_t DEFAULT_I2C_FREQ = 400000; // 400kHz para Fast Mode I2C
 
 class AS5600Sensor
@@ -19,7 +19,7 @@ public:
     AS5600Sensor(
         int sdaPin,
         int sclPin,
-        int address = DEFAULT_ADRESSS,
+        int address = DEFAULT_ADDRESS,
         uint32_t i2cFreq = DEFAULT_I2C_FREQ) : sdaPin(sdaPin),
                                                sclPin(sclPin),
                                                address(address),
