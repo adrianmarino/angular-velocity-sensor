@@ -3,41 +3,39 @@
 #include <AngularVelocityCalculator.h>
 
 MagneticEncoder *encoder;
-AngularVelocityCalculator *angularVelocityCalculator;
+AngularVelocityCalculator *filteredVelocity;
 
-void onValueChange(int Value,
-                   float valueDiff,
-                   float deltaTimeMs)
+void onValueChange(int value,
+                  float valueDiff,
+                  float deltaTimeMs)
 {
-    float w = angularVelocityCalculator->perform(valueDiff, deltaTimeMs);
-
-    Serial.print("Grad: ");
-    Serial.print(Value);
-    Serial.print(" | W: ");
-    Serial.println(w);
+    float filterValue = filteredVelocity->perform(valueDiff, deltaTimeMs);
+    Serial.print(">w:");
+    Serial.println(filterValue);
 }
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     while (!Serial && millis() < 5000);
 
     encoder = new MagneticEncoder(
         new AS5600Sensor(
             21,
             22, // Pines 21 y 22 para I2C
-            DEFAULT_ADRESSS,
-            DEFAULT_I2C_FREQ),
-        onValueChange);
+            DEFAULT_ADRESSS),
+        onValueChange,
+        50);
 
     if (!encoder->begin())
     {
         while(true) {}
     }
 
-    angularVelocityCalculator = new AngularVelocityCalculator();
+    filteredVelocity = new AngularVelocityCalculator(0.6);
 }
 
-void loop() {
+void loop()
+{
     encoder->update();
 }

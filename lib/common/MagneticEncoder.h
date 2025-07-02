@@ -3,7 +3,7 @@
 #include <Arduino.h> // Necesario para millis() y Serial.println()
 #include <math.h>    // Necesario para abs()
 
-typedef void (*AngularVelocityChangeCallback)(int rawValue, float diffRaw, float deltaTimeMs);
+typedef void (*AngularVelocityChangeCallback)(int value, float valueDiff, float deltaTimeMs);
 
 const int DEFAULT_THRESHOULD = 1; // Umbral por defecto: 1 unidad cruda (aprox. 0.087 grados)
                                   // Este umbral se aplica al cambio de ángulo crudo.
@@ -14,6 +14,7 @@ class MagneticEncoder
 {
 
 private:
+
   AS5600Sensor *sensor;               // Puntero al objeto AS5600Sensor subyacente
   uint16_t previousRawValue;          // Almacena el valor crudo del ángulo de la lectura anterior exitosa
   unsigned long previousUpdateTimeMs; // Almacena el tiempo en ms de la lectura anterior exitosa
@@ -81,12 +82,7 @@ public:
         // Calcula la diferencia de tiempo en milisegundos
         unsigned long deltaTimeMs = currentTimeMs - previousUpdateTimeMs;
 
-        // Solo calcula y reporta la velocidad angular si ha habido un cambio significativo
-        // basado en el umbral de cambio de ángulo crudo.
-        if (abs(diffRaw) > valueChangeThreshold)
-        {
-          angularVelocityChangeCallback(currentRawValue, diffRaw, deltaTimeMs);
-        }
+        angularVelocityChangeCallback(currentRawValue, diffRaw, deltaTimeMs);
 
         // Actualiza los valores anteriores para la próxima iteración,
         // independientemente de si se superó el umbral. Esto asegura que

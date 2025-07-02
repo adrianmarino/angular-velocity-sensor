@@ -1,28 +1,42 @@
 #pragma once
 #include <Arduino.h>
+#include <Ewma.h>
+#include <math.h>
 
 class AngularVelocityCalculator
 {
 
 private:
-  unsigned long previousUpdateTimeMs;
+  // Factor de conversión de unidades crudas del encoder (12-bit, 4096 pasos) a radianes.
+  // 2 * PI radianes en una rotación completa.
+  static constexpr float RAW_TO_RADIANS = (2.0f * M_PI) / 4096.0f;
 
-public:
-  AngularVelocityCalculator(): previousUpdateTimeMs(0)
+  Ewma *filter;
+  float deadZone;
+
+  public : AngularVelocityCalculator(
+    double alpha = 0.8,
+    float deadZone = 0.45) : filter(new Ewma(alpha)), deadZone(deadZone)
   {
   }
 
-  float perform(
-      float valueDiff,
-      float deltaTimeMs)
+  ~AngularVelocityCalculator()
   {
-    if(deltaTimeMs > 0) {
-      // Convierte la diferencia de unidades crudas a grados
-      float deltaDegrees = valueDiff / 4096.0 * 360.0;
+    delete filter;
+  }
 
-      // Calcula la velocidad angular en grados por segundo
-      return deltaDegrees / (deltaTimeMs / 1000.0);
-    }
-    return 0.0;
+  float perform(float valueDiff, float deltaTimeMs)
+  {
+    if(deltaTimeMs <= 0) return 0.0f;
+
+    // Convierte la diferencia de unidades crudas a radianes
+    float deltaRadians = valueDiff * RAW_TO_RADIANS;
+
+    // Calcula la velocidad angular en radianes por segundo
+    float value = deltaRadians / (deltaTimeMs / 1000.0f);
+
+    value = filter->filter(value);
+
+    return abs(value) <= deadZone ? 0.0f : value;
   }
 };
