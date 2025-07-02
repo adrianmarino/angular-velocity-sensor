@@ -1,45 +1,32 @@
-# 1 "/var/tmp/tmpnl7hmqk2"
+# 1 "/var/tmp/tmpgtarhf5e"
 #include <Arduino.h>
 # 1 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
-#include <AS5600Sensor.h>
 #include <MagneticEncoder.h>
 #include <WCalculator.h>
 
-const int SDA_PIN = 20;
-const int SCL_PIN = 21;
+const int I2C_SDA = 21;
+const int I2C_SCL = 22;
 const int SAMPLE_INTERVAL_MS = 50;
-const int FILTER_ALPHA = 0.6;
-
-WCalculator *wCalculator = new WCalculator(FILTER_ALPHA);
-void readValue(int value,
-                   float valueDiff,
-                   float deltaTimeMs);
+const float EWMA_ALPHA = 0.6;
+void onUpdate(int step, float w);
 void setup();
 void loop();
-#line 12 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
-void readValue(int value,
-                   float valueDiff,
-                   float deltaTimeMs)
+#line 9 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
+void onUpdate(int step, float w)
 {
-    Serial.print(">w:");
-    Serial.println(wCalculator->getWInRadBySec(valueDiff, deltaTimeMs));
+    Serial.print(">Step:");
+    Serial.print(step);
+    Serial.print(",W:");
+    Serial.println(w);
 }
 
-AS5600Sensor *sensor = new AS5600Sensor(
-    SDA_PIN,
-    SCL_PIN,
-    DEFAULT_ADDRESS);
-
-MagneticEncoder *encoder = new MagneticEncoder(
-    sensor,
-    readValue,
-    SAMPLE_INTERVAL_MS);
-
+MagneticEncoder *encoder;
 void setup()
 {
-    Serial.begin(115200);
-    while (!Serial && millis() < 5000)
-        ;
+    Serial.begin(9600);
+    while (!Serial && millis() < 5000);
+
+    encoder = new MagneticEncoder(I2C_SDA, I2C_SCL, onUpdate, SAMPLE_INTERVAL_MS, EWMA_ALPHA);
 
     encoder->begin();
 }
