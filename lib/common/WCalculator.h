@@ -3,7 +3,7 @@
 #include <Ewma.h>
 #include <math.h>
 
-class AngularVelocityCalculator
+class WCalculator
 {
 
 private:
@@ -14,29 +14,34 @@ private:
   Ewma *filter;
   float deadZone;
 
-  public : AngularVelocityCalculator(
-    double alpha = 0.8,
-    float deadZone = 0.45) : filter(new Ewma(alpha)), deadZone(deadZone)
+public:
+  WCalculator(
+      double alpha = 0.8,
+      float deadZone = 0.45) : filter(new Ewma(alpha)), deadZone(deadZone)
   {
   }
 
-  ~AngularVelocityCalculator()
+  ~WCalculator()
   {
     delete filter;
   }
 
-  float perform(float valueDiff, float deltaTimeMs)
+  float getWInRadBySec(float valueDiff, float deltaTimeMs)
   {
-    if(deltaTimeMs <= 0) return 0.0f;
+    if (deltaTimeMs <= 0)
+      return 0.0f;
 
     // Convierte la diferencia de unidades crudas a radianes
     float deltaRadians = valueDiff * RAW_TO_RADIANS;
 
+    // Convierte el delta time a segundos
+    float deltaTimeSec = deltaTimeMs / 1000.0f;
+
     // Calcula la velocidad angular en radianes por segundo
-    float value = deltaRadians / (deltaTimeMs / 1000.0f);
+    float wInRadBySec = deltaRadians / deltaTimeSec;
 
-    value = filter->filter(value);
+    wInRadBySec = filter->filter(wInRadBySec);
 
-    return abs(value) <= deadZone ? 0.0f : value;
+    return abs(wInRadBySec) <= deadZone ? 0.0f : wInRadBySec;
   }
 };

@@ -1,38 +1,33 @@
 #include <AS5600Sensor.h>
 #include <MagneticEncoder.h>
-#include <AngularVelocityCalculator.h>
+#include <WCalculator.h>
 
-MagneticEncoder *encoder;
-AngularVelocityCalculator *filteredVelocity;
+const int I2C_SDA = 21;
+const int I2C_SCL = 22;
+const int SAMPLE_INTERVAL_MS = 50;
+const float EWMA_ALPHA = 0.6;
 
-void onValueChange(int value,
-                  float valueDiff,
-                  float deltaTimeMs)
+WCalculator *wCalculator = new WCalculator(EWMA_ALPHA);
+
+void onUpdate(int value,
+              float valueDiff,
+              float deltaTimeMs)
 {
-    float filterValue = filteredVelocity->perform(valueDiff, deltaTimeMs);
     Serial.print(">w:");
-    Serial.println(filterValue);
+    Serial.println(wCalculator->getWInRadBySec(valueDiff, deltaTimeMs));
 }
+
+MagneticEncoder *encoder = new MagneticEncoder(
+    new AS5600Sensor(I2C_SDA, I2C_SCL),
+    onUpdate,
+    SAMPLE_INTERVAL_MS);
+
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
     while (!Serial && millis() < 5000);
-
-    encoder = new MagneticEncoder(
-        new AS5600Sensor(
-            21,
-            22, // Pines 21 y 22 para I2C
-            DEFAULT_ADRESSS),
-        onValueChange,
-        50);
-
-    if (!encoder->begin())
-    {
-        while(true) {}
-    }
-
-    filteredVelocity = new AngularVelocityCalculator(0.6);
+    encoder->begin();
 }
 
 void loop()
