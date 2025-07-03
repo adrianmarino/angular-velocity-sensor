@@ -6,7 +6,7 @@ const int SAMPLE_INTERVAL_MS = 50;
 const float EWMA_ALPHA = 0.6;
 const uint32_t I2C_BUS_FREQ = 400000; // 400kHz para Fast Mode I2C
 
-void onUpdate(int step, float w)
+void onUpdate1(int step, float w)
 {
     Serial.print(">Step:");
     Serial.print(step);
@@ -14,7 +14,7 @@ void onUpdate(int step, float w)
     Serial.println(w);
 }
 
-MagneticEncoder *encoder;
+MagneticEncoder *encoder1;
 void setup()
 {
     Serial.begin(9600);
@@ -25,16 +25,16 @@ void setup()
     Wire.begin(I2C_SDA, I2C_SCL);
     Wire.setClock(I2C_BUS_FREQ);
 
-    encoder = new MagneticEncoder(
-        onUpdate,
+    encoder1 = new MagneticEncoder(
+        onUpdate1,
         DEFAULT_ADDRESS,
         SAMPLE_INTERVAL_MS,
         EWMA_ALPHA);
 
-    encoder->begin();
+    encoder1->begin();
 }
 
 void loop()
 {
-    encoder->update();
+    encoder1->update();
 }
