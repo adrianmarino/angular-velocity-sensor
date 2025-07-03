@@ -20,16 +20,16 @@ void setup()
     Serial.begin(9600);
     while (!Serial && millis() < 5000);
 
+
+    encoder1 = new MagneticEncoder(
+        onUpdate1,
+        SAMPLE_INTERVAL_MS,
+        EWMA_ALPHA);
+
     // Inicializa el bus I2C principal del ESP32
     // Los pines SDA y SCL del ESP32 se conectan al multiplexor
     Wire.begin(I2C_SDA, I2C_SCL);
     Wire.setClock(I2C_BUS_FREQ);
-
-    encoder1 = new MagneticEncoder(
-        onUpdate1,
-        DEFAULT_ADDRESS,
-        SAMPLE_INTERVAL_MS,
-        EWMA_ALPHA);
 
     encoder1->begin();
 }

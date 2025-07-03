@@ -3,8 +3,8 @@
 #include <Ewma.h>
 #include <math.h>
 
-const int DEFAULT_ALPHA = 0.8;
-const int DEFAULT_DEAD_ZONE = 0.45;
+const float DEFAULT_ALPHA = 0.8;
+const float DEFAULT_DEAD_ZONE = 0.55;
 
 class WCalculator
 {
@@ -45,6 +45,6 @@ public:
 
     wInRadBySec = filter->filter(wInRadBySec);
 
-    return abs(wInRadBySec) <= deadZone ? 0.0f : wInRadBySec;
+    return fabs(wInRadBySec) <= deadZone ? 0.0f : wInRadBySec;
   }
 };
