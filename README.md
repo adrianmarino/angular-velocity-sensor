@@ -2,7 +2,6 @@
 
 Calculate angular velocity (W) with a magnetic sensor.
 
+![image](https://github.com/user-attachments/assets/cb07b5d0-5167-4d4c-a80d-dbfe414b61a4)
 
-![image](https://github.com/user-attachments/assets/aeaa6198-8cc6-4596-9123-6d150e7d2619)
-
-[Worki](https://wokwi.com/projects/435450863948343297)
+[Worki](https://wokwi.com/projects/435451083031543809)
