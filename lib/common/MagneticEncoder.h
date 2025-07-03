@@ -7,21 +7,16 @@
 
 typedef void (*OnUpdateWEvent)(int step, float w);
 
-const int DEFAULT_THRESHOULD = 1; // Umbral por defecto: 1 unidad cruda (aprox. 0.087 grados)
-                                  // Este umbral se aplica al cambio de ángulo crudo.
-
 const int DEFAULT_SAMPLE_INTERVAL_MS = 80;
 
 class MagneticEncoder
 {
 
 private:
-
-  AS5600Sensor *sensor;               // Puntero al objeto AS5600Sensor subyacente
-  uint16_t previousStep;          // Almacena el valor crudo del ángulo de la lectura anterior exitosa
-  unsigned long previousUpdateTimeMs; // Almacena el tiempo en ms de la lectura anterior exitosa
+  AS5600Sensor *sensor;
+  uint16_t previousStep;              // Almacena el valor del ángulo de la lectura anterior
+  unsigned long previousUpdateTimeMs; // Almacena el tiempo en ms de la lectura anterior
   unsigned long sampleIntervalMs;     // Intervalo de muestreo deseado en milisegundos
-  uint16_t valueChangeThreshold;      // Umbral de cambio en unidades crudas para activar el callback
 
   OnUpdateWEvent onUpdateEvent; // Función a llamar cuando la velocidad angular cambia
 
@@ -30,21 +25,18 @@ private:
 public:
   // Constructor de la clase MagneticEncoder
   MagneticEncoder(
-      int sdaPin,
-      int sclPin,
-      OnUpdateWEvent cb, // Ahora espera un callback para int (valor crudo) y float (velocidad angular)
-      int address = DEFAULT_ADDRESS,
+      OnUpdateWEvent cb,
       unsigned long sampleIntervalMs = DEFAULT_SAMPLE_INTERVAL_MS,
       double alpha = DEFAULT_ALPHA,
       float deadZone = DEFAULT_DEAD_ZONE,
-      uint16_t threshold = DEFAULT_THRESHOULD) : sensor(sensor), // Inicializa el puntero al sensor
-                                                 sampleIntervalMs(sampleIntervalMs),
-                                                 onUpdateEvent(cb), // Asigna la nueva función de callback
-                                                 valueChangeThreshold(threshold),
-                                                 previousStep(0), // Inicializa el valor anterior a 0
-                                                 previousUpdateTimeMs(0)
+      int address = DEFAULT_ADDRESS) : sensor(sensor), // Inicializa el puntero al sensor
+                                       sampleIntervalMs(sampleIntervalMs),
+                                       onUpdateEvent(cb), // Asigna la nueva función de callback
+
+                                       previousStep(0), // Inicializa el valor anterior a 0
+                                       previousUpdateTimeMs(0)
   {
-    sensor = new AS5600Sensor(sdaPin, sclPin, address);
+    sensor = new AS5600Sensor(address);
     wCalculator = new WCalculator(alpha, deadZone);
   }
 
@@ -52,9 +44,9 @@ public:
   bool begin()
   {
     if (sensor->begin())
-    {                                        // Intenta inicializar el sensor AS5600
+    {                                    // Intenta inicializar el sensor AS5600
       previousStep = sensor->getValue(); // Obtiene el valor inicial
-      previousUpdateTimeMs = millis();       // Registra el tiempo de inicio
+      previousUpdateTimeMs = millis();   // Registra el tiempo de inicio
       return true;
     }
     else
@@ -104,9 +96,7 @@ public:
       }
       else
       {
-        Serial.println("MagneticEncoder: ERROR: Fallo en la lectura del AS5600.");
-        // Si la lectura del sensor falla, previousStep y previousUpdateTimeMs no se actualizan.
-        // Esto significa que la próxima lectura exitosa calculará la velocidad desde el último punto bueno.
+        Serial.println("ERROR: cant read a value from AS5600 magnetic sensor.");
       }
     }
   }

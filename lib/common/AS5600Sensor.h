@@ -2,35 +2,21 @@
 #include <Wire.h>
 
 const int ERROR_VALUE = 0xFFFF;
-const int DEFAULT_ADDRESS = 0x36;         // Dirección I2C del AS5600
-const uint32_t DEFAULT_I2C_FREQ = 400000; // 400kHz para Fast Mode I2C
+const int DEFAULT_ADDRESS = 0x36; // Dirección I2C del AS5600
+
 
 class AS5600Sensor
 {
 
 private:
-    int sdaPin;
-    int sclPin;
     int value;
     int address;
-    uint32_t i2cFreq;
 
 public:
-    AS5600Sensor(
-        int sdaPin,
-        int sclPin,
-        int address = DEFAULT_ADDRESS,
-        uint32_t i2cFreq = DEFAULT_I2C_FREQ) : sdaPin(sdaPin),
-                                               sclPin(sclPin),
-                                               address(address),
-                                               i2cFreq(i2cFreq),
-                                               value(ERROR_VALUE) {}
+    AS5600Sensor(int address = DEFAULT_ADDRESS): address(address), value(ERROR_VALUE) {}
 
     bool begin()
     {
-        Wire.begin(sdaPin, sclPin);
-        Wire.setClock(i2cFreq);
-
         update();
         return isSuccessful();
     }
@@ -48,7 +34,7 @@ public:
     float update()
     {
         Wire.beginTransmission(address);
-        Wire.write(0x0E);                         // Dirección del registro de ángulo (MSB)
+        Wire.write(0x0E); // Dirección del registro de ángulo (MSB)
         byte error = Wire.endTransmission(false); // No liberar el bus I2C
 
         if (error != 0)
