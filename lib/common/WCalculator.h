@@ -29,7 +29,7 @@ public:
     delete filter;
   }
 
-  float getWInRadBySec(float valueDiff, float deltaTimeMs)
+  float getWInRadBySec(float valueDiff, float deltaTimeMs, bool applyFilter=true)
   {
     if (deltaTimeMs <= 0)
       return 0.0f;
@@ -43,7 +43,9 @@ public:
     // Calcula la velocidad angular en radianes por segundo
     float wInRadBySec = deltaRadians / deltaTimeSec;
 
-    wInRadBySec = filter->filter(wInRadBySec);
+    if(applyFilter) {
+      wInRadBySec = filter->filter(wInRadBySec);
+    }
 
     return fabs(wInRadBySec) <= deadZone ? 0.0f : wInRadBySec;
   }

@@ -54,6 +54,7 @@ public:
         {
             value = ERROR_VALUE;
         }
+        Wire.endTransmission(address);
 
         return value;
     }

@@ -5,14 +5,16 @@
 #include <AS5600Sensor.h>
 #include <WCalculator.h>
 
-typedef void (*OnUpdateWEvent)(int step, float w);
+typedef void (*OnUpdateWEvent)(short int channel, int step, float w);
 
-const int DEFAULT_SAMPLE_INTERVAL_MS = 80;
+const int DEFAULT_SAMPLE_INTERVAL_MS = 50;
 
 class MagneticEncoder
 {
 
 private:
+  bool applyFilter;
+  short int channel;
   AS5600Sensor *sensor;
   uint16_t previousStep;              // Almacena el valor del ángulo de la lectura anterior
   unsigned long previousUpdateTimeMs; // Almacena el tiempo en ms de la lectura anterior
@@ -26,8 +28,10 @@ public:
   // Constructor de la clase MagneticEncoder
   MagneticEncoder(
       OnUpdateWEvent cb,
+      short int channel = 0,
       unsigned long sampleIntervalMs = DEFAULT_SAMPLE_INTERVAL_MS,
       double alpha = DEFAULT_ALPHA,
+      bool applyFilter = true,
       float deadZone = DEFAULT_DEAD_ZONE,
       int address = DEFAULT_ADDRESS) : sensor(sensor), // Inicializa el puntero al sensor
                                        sampleIntervalMs(sampleIntervalMs),
@@ -36,6 +40,8 @@ public:
                                        previousStep(0), // Inicializa el valor anterior a 0
                                        previousUpdateTimeMs(0)
   {
+    this->channel = channel;
+    this->applyFilter = applyFilter;
     sensor = new AS5600Sensor(address);
     wCalculator = new WCalculator(alpha, deadZone);
   }
@@ -51,7 +57,9 @@ public:
     }
     else
     {
-      Serial.println("MagneticEncoder: Fallo al inicializar el AS5600 subyacente.");
+      Serial.print("Encoder");
+      Serial.print(channel);
+      Serial.print(": Initialization fail.");
       return false;
     }
   }
@@ -84,9 +92,9 @@ public:
         // Calcula la diferencia de tiempo en milisegundos
         unsigned long deltaTimeMs = currentTimeMs - previousUpdateTimeMs;
 
-        float currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs);
+        float currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs, this->applyFilter);
 
-        onUpdateEvent(currentStep, currentW);
+        onUpdateEvent(channel, currentStep, currentW);
 
         // Actualiza los valores anteriores para la próxima iteración,
         // independientemente de si se superó el umbral. Esto asegura que
@@ -96,8 +104,12 @@ public:
       }
       else
       {
-        Serial.println("ERROR: cant read a value from AS5600 magnetic sensor.");
+        Serial.print("Encoder");
+        Serial.print(channel);
+        Serial.print(": Cant read a value.");
       }
     }
   }
+
+  short int getChannel() { return channel; }
 };
