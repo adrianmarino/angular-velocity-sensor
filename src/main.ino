@@ -2,7 +2,7 @@
 
 const int I2C_SDA = 21;
 const int I2C_SCL = 22;
-const int SAMPLE_INTERVAL_MS = 13;
+const int SAMPLE_INTERVAL_MS = 20;
 const float EWMA_ALPHA = 0.8;
 const uint32_t I2C_BUS_FREQ = 400000; // 400kHz para Fast Mode I2C
 const short int ENCODERS_COUNT = 4;
@@ -32,7 +32,7 @@ void setup()
     // Setear la frecuencia de la CPU a 240 MHz (Máxima)
     setCpuFrequencyMhz(235);
 
-    Serial.begin(115200);
+    Serial.begin(9600);
     while (!Serial && millis() < 5000)
         ;
 
