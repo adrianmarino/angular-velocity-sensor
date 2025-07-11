@@ -19,6 +19,11 @@ std_msgs__msg__Float32MultiArray *createFloatArrayMessage(size_t length)
 {
   std_msgs__msg__Float32MultiArray *msg = new std_msgs__msg__Float32MultiArray();
   msg->data.data = (float *)malloc(sizeof(float) * length);
+  if (msg->data.data == NULL) {
+    delete msg;
+    error("Failed to allocate memory for Float32MultiArray");
+    return NULL;
+  }
   msg->data.size = length;
   msg->data.capacity = length;
   return msg;
