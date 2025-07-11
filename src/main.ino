@@ -25,7 +25,9 @@ void initOdometry(RosNodeManager *nodeManager)
 {
     info("Start Setup Odometry...");
 
-    odometryPublisher = new OdometryPublisher(nodeManager->getNode());
+    odometryPublisher = new OdometryPublisher(
+        nodeManager->getNode(), 
+        ODOMETRYY_TOPIC);
 
     odomPublishTime.setup();
 

@@ -1,8 +1,8 @@
 #include "OdometryPublisher.h"
 
-OdometryPublisher::OdometryPublisher(rcl_node_t *node)
+OdometryPublisher::OdometryPublisher(rcl_node_t *node, String topic_name)
 {
-    publisher = new FloatArrayPublisher(MicroRosPublisher::createFloatArray(node, "/robot_w"), 2);
+    publisher = new FloatArrayPublisher(MicroRosPublisher::createFloatArray(node, topic_name), 2);
 }
 
 void OdometryPublisher::publish(const RobotOdometry &data)

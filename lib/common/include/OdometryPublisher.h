@@ -19,7 +19,7 @@ public:
      * Constructor for OdometryPublisher.
      * @param node Pointer to the ROS node
      */
-    OdometryPublisher(rcl_node_t *node);
+    OdometryPublisher(rcl_node_t *node, String topic_name = "odometry");
     
     ~OdometryPublisher();
 

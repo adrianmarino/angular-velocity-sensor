@@ -23,6 +23,8 @@ const short int ENCODERS_COUNT = 4;
 
 const unsigned int UPDATE_INTERVAL_MS = 50;
 
+const String ODOMETRYY_TOPIC = "/robot_w";
+
 namespace RemoteMicroRosAgent
 {
     const String WifiSSID = "Zion24";
