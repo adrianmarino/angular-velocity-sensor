@@ -5,6 +5,7 @@
 #include <RobotOdometry.h>
 #include <OdometryPublisher.h>
 #include <RosNodeManager.h>
+#include <SerialUtils.h>
 
 const String NODE_NAME = "robot_odometry";
 

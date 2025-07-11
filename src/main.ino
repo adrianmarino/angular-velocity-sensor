@@ -2,7 +2,7 @@
 
 void initRosNode()
 {
-    Serial.println("Start Setup Node...");
+    info("Start Setup Node...");
 
     nodeManager = new RosNodeManager(
         NODE_NAME,
@@ -18,23 +18,23 @@ void initRosNode()
 
     nodeManager->setup();
     
-    Serial.println("End Setup Node...");
+    info("End Setup Node...");
 }
 
 void initOdometry(RosNodeManager *nodeManager)
 {
-    Serial.println("Start Setup Odometry...");
+    info("Start Setup Odometry...");
 
     odometryPublisher = new OdometryPublisher(nodeManager->getNode());
 
     odomPublishTime.setup();
 
-    Serial.println("End Setup Odometry...");
+    info("End Setup Odometry...");
 }
 
 void initEncoders()
 {
-    Serial.println("Start Setup Encoders...");
+    info("Start Setup Encoders...");
 
     // Inicializa el bus I2C principal del ESP32
     // Los pines SDA y SCL del ESP32 se conectan al multiplexor
@@ -43,10 +43,7 @@ void initEncoders()
 
     for (int i = 0; i < ENCODERS_COUNT; i++)
     {
-        Serial.println("");
-        Serial.print("Setup Encoder ");
-        Serial.print(i);
-        Serial.println("...");
+        info("Setup Encoder " + String(i) + "...");
 
         selectI2CMuxChannel(i);
         delay(5);
@@ -60,7 +57,7 @@ void initEncoders()
         encoders[i]->begin();
     }
 
-    Serial.println("End Setup Encoders...");
+    info("End Setup Encoders...");
 }
 
 void publishOdometry()
@@ -88,10 +85,6 @@ void updateEncoders()
     }
 }
 
-void initSerial(unsigned long baud) {
-    Serial.begin(baud);
-    while (!Serial && millis() < 5000);
-}
 
 void onUpdate(short int id, int step, float w)
 {
@@ -112,13 +105,13 @@ void setup()
 
     initSerial(9600);
 
-    Serial.println("Start Robot Odometry Setup...");
+    info("Start Robot Odometry Setup...");
 
     initEncoders();
     initRosNode();
     initOdometry(nodeManager);
 
-    Serial.println("Finish Robot Odometry Setup...");
+    info("Finish Robot Odometry Setup...");
 }
 
 void loop()

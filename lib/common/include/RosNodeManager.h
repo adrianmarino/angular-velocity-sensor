@@ -1,6 +1,7 @@
 #pragma once
 #include <RosUtils.h>
 #include <StringUtils.h>
+#include <SerialUtils.h>
 #include <rclc/executor.h>
 #include <timestamp.h>
 

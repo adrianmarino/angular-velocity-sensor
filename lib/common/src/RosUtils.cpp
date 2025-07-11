@@ -1,21 +1,19 @@
 #include "RosUtils.h"
-
+#include "SerialUtils.h"
 
 void check(String msg)
 {
   while (1)
   {
-    Serial.println("Check: " + msg);
+    error("Check: " + msg);
     delay(1000);
   }
 }
 
 void softCheck(String msg)
 {
-  Serial.println("Soft Check: " + msg);
+  error("Soft Check: " + msg);
 }
-
-
 
 
 void connect_to_agent_via_wifi(
@@ -31,20 +29,20 @@ void connect_to_agent_via_wifi(
     // Establece el ESP32 en modo estación
     WiFi.mode(WIFI_STA);
     // Desactiva el modo de ahorro de energía Wi-Fi
-    WiFi.setSleep(false);
+    WiFi.setSleep(energySavingMode);
   }
 
   IPAddress ip;
   ip.fromString(agent_ip);
 
-  Serial.println("Set Micro Ros wifi transports...");
+  info("Set Micro Ros wifi transports...");
   set_microros_wifi_transports(
       toCharArray(wifi_ssid),
       toCharArray(wifi_pass),
       ip,
       agent_port);
 
-  Serial.println("Wait for wifi connection...");
+  info("Wait for wifi connection...");
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(100);
@@ -52,10 +50,9 @@ void connect_to_agent_via_wifi(
   }
 
   if (WiFi.setTxPower(wifi_power))
-    Serial.println("Setup TX Power...");
+    info("Setup TX Power...");
   else
-    Serial.println("TX Power: Setup error...");
+    error("TX Power: Setup error...");
 
-  Serial.println();
-  Serial.println("Wifi connection stablished...");
+  info("Wifi connection stablished...");
 }

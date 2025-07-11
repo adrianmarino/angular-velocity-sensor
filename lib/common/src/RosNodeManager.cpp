@@ -15,17 +15,19 @@ RosNodeManager::RosNodeManager(
     this->agent_ip = agent_ip;
     this->agent_port = agent_port;
     this->wifiEnergySavingMode = wifiEnergySavingMode;
+    this->wifi_power = wifi_power;
 }
 
 void RosNodeManager::initWifi()
 {
-    Serial.println("Wait for wifi connection");
+    info("Wait for wifi connection...");
     connect_to_agent_via_wifi(
         wifi_ssid,
         wifi_pass,
         agent_ip,
         agent_port,
-        wifiEnergySavingMode
+        wifiEnergySavingMode,
+        wifi_power
     );
 }
 
@@ -59,7 +61,7 @@ void RosNodeManager::setup()
         )
     );
 
-    Serial.println("Connected to Ros2 Agent");
+    info("Connected to Ros2 Agent");
 }
 
 
