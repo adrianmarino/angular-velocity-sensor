@@ -1,5 +1,6 @@
 #pragma once
 #include "RosUtils.h"
+#include "SerialUtils.h"
 #include <std_msgs/msg/float32.h>
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/float32_multi_array.h>
