@@ -126,4 +126,5 @@ void loop()
 {
     updateEncoders();
     publishOdometry();
+    nodeManager->update();
 }

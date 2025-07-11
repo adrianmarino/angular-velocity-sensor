@@ -43,13 +43,17 @@ void RosNodeManager::setup()
             &allocator));
 
     // Create node
+    char* charNodeName = toCharArray(nodeName);
+
     CHECK(
         "Can't create micro-ros node: " + nodeName,
         rclc_node_init_default(
             &node,
-            toCharArray(nodeName),
+            charNodeName,
             "",
             &support));
+    
+    delete charNodeName;
 
     CHECK(
         "Error to create executor for node: " + nodeName,
