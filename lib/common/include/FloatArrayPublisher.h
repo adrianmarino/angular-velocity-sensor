@@ -17,6 +17,8 @@ public:
      */
     FloatArrayPublisher(MicroRosPublisher* publisher, size_t length);
 
+    ~FloatArrayPublisher();
+
     /** 
      * Publish the float array.
      * @param data_array Pointer to the float array to be published.

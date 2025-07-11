@@ -18,3 +18,11 @@ void FloatArrayPublisher::publish(float *data_array)
     }
     publisher->publish(msg);
 }
+
+FloatArrayPublisher::~FloatArrayPublisher() {
+    if (msg) {
+        free(msg->data.data);
+        delete msg;
+    }
+    delete publisher;
+}

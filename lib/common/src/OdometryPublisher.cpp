@@ -11,3 +11,7 @@ void OdometryPublisher::publish(const RobotOdometry &data)
 
     publisher->publish(w_data);
 }
+
+OdometryPublisher::~OdometryPublisher() {
+    delete publisher;
+}

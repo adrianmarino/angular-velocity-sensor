@@ -88,14 +88,20 @@ void updateEncoders()
 
 void onUpdate(short int id, int step, float w)
 {
-    if (id == 0)
+    switch (id) {
+    case 0:
         robotW.fl = w;
-    if (id == 1)
+        break;
+    case 1:
         robotW.fr = w;
-    if (id == 2)
+        break;
+    case 2:
         robotW.bl = w;
-    if (id == 3)
+        break;
+    case 3:
         robotW.br = w;
+        break;
+    }
 }
 
 void setup()

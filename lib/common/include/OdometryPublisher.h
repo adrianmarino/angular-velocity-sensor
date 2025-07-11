@@ -21,6 +21,8 @@ public:
      */
     OdometryPublisher(rcl_node_t *node);
     
+    ~OdometryPublisher();
+
     /**
      * Publish the odometry data.
      * @param data Robot movement data.
