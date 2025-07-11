@@ -23,6 +23,8 @@ private:
   OnUpdateWEvent onUpdateEvent; // Función a llamar cuando la velocidad angular cambia
 
   WCalculator *wCalculator;
+  float currentW;
+  uint16_t currentStep;
 
 public:
   // Constructor de la clase MagneticEncoder
@@ -44,6 +46,8 @@ public:
     this->applyFilter = applyFilter;
     sensor = new AS5600Sensor(address);
     wCalculator = new WCalculator(alpha, deadZone);
+    currentW = 0;
+    currentStep = 0;
   }
 
   // Inicializa el sensor de la rueda
@@ -76,7 +80,7 @@ public:
 
       if (sensor->isSuccessful())
       {
-        uint16_t currentStep = sensor->getValue();
+        currentStep = sensor->getValue();
 
         // Calcula la diferencia de ángulo crudo, manejando el "wrap-around" (0-4095)
         int diffRaw = (int)currentStep - (int)previousStep;
@@ -92,7 +96,7 @@ public:
         // Calcula la diferencia de tiempo en milisegundos
         unsigned long deltaTimeMs = currentTimeMs - previousUpdateTimeMs;
 
-        float currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs, this->applyFilter);
+        currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs, this->applyFilter);
 
         onUpdateEvent(channel, currentStep, currentW);
 
@@ -112,4 +116,8 @@ public:
   }
 
   short int getChannel() { return channel; }
+
+  float getW() { return currentW; }
+
+  uint16_t getStep() { return currentStep; }
 };
