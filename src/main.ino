@@ -43,11 +43,14 @@ void initEncoders()
     Wire.begin(I2C_SDA, I2C_SCL);
     Wire.setClock(I2C_BUS_FREQ);
 
+    multiplexor = new I2CMultiplexor();
+
+
     for (int i = 0; i < ENCODERS_COUNT; i++)
     {
         logger.info("Setup Encoder " + String(i) + "...");
 
-        selectI2CMuxChannel(i);
+        multiplexor->selectChannel(i);
         delay(5);
 
         encoders[i] = new MagneticEncoder(
@@ -82,7 +85,7 @@ void updateEncoders()
     for (int i = 0; i < ENCODERS_COUNT; i++)
     {
         MagneticEncoder *encoder = encoders[i];
-        selectI2CMuxChannel(encoder->getChannel());
+        multiplexor->selectChannel(encoder->getChannel());
         encoder->update();
     }
 }

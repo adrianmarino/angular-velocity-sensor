@@ -1,5 +1,5 @@
 #include <MagneticEncoder.h>
-#include <I2C.h>
+#include <I2CMultiplexor.h>
 #include <RobotW.h>
 #include <DeltaTimeComputer.h>
 #include <RobotOdometry.h>
@@ -50,3 +50,5 @@ RobotOdometry robotOdometry;
 DeltaTimeComputer odomPublishTime(UPDATE_INTERVAL_MS);
 
 OdometryPublisher *odometryPublisher;
+
+I2CMultiplexor *multiplexor;
