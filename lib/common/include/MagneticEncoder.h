@@ -4,6 +4,7 @@
 #include <math.h>    // Necesario para abs()
 #include <AS5600Sensor.h>
 #include <WCalculator.h>
+#include <Logger.h>
 
 typedef void (*OnUpdateWEvent)(short int channel, int step, float w);
 
@@ -23,6 +24,8 @@ private:
   OnUpdateWEvent onUpdateEvent; // Función a llamar cuando la velocidad angular cambia
 
   WCalculator *wCalculator;
+  float currentW;
+  uint16_t currentStep;
 
 public:
   // Constructor de la clase MagneticEncoder
@@ -44,6 +47,8 @@ public:
     this->applyFilter = applyFilter;
     sensor = new AS5600Sensor(address);
     wCalculator = new WCalculator(alpha, deadZone);
+    currentW = 0;
+    currentStep = 0;
   }
 
   // Inicializa el sensor de la rueda
@@ -57,9 +62,7 @@ public:
     }
     else
     {
-      Serial.print("Encoder");
-      Serial.print(channel);
-      Serial.print(": Initialization fail.");
+      logger.error("'" + String(channel) + "' encoder initialization fail.");
       return false;
     }
   }
@@ -76,7 +79,7 @@ public:
 
       if (sensor->isSuccessful())
       {
-        uint16_t currentStep = sensor->getValue();
+        currentStep = sensor->getValue();
 
         // Calcula la diferencia de ángulo crudo, manejando el "wrap-around" (0-4095)
         int diffRaw = (int)currentStep - (int)previousStep;
@@ -92,7 +95,7 @@ public:
         // Calcula la diferencia de tiempo en milisegundos
         unsigned long deltaTimeMs = currentTimeMs - previousUpdateTimeMs;
 
-        float currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs, this->applyFilter);
+        currentW = wCalculator->getWInRadBySec(diffRaw, deltaTimeMs, this->applyFilter);
 
         onUpdateEvent(channel, currentStep, currentW);
 
@@ -104,12 +107,14 @@ public:
       }
       else
       {
-        Serial.print("Encoder");
-        Serial.print(channel);
-        Serial.print(": Cant read a value.");
+        logger.error("Cant read a value from " + String(channel) + " encoder.");
       }
     }
   }
 
   short int getChannel() { return channel; }
+
+  float getW() { return currentW; }
+
+  uint16_t getStep() { return currentStep; }
 };
