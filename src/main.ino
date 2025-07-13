@@ -2,7 +2,7 @@
 
 void initRosNode()
 {
-    info("Start Setup Node...");
+    logger.info("Start Setup Node...");
 
     nodeManager = new RosNodeManager(
         NODE_NAME,
@@ -18,12 +18,12 @@ void initRosNode()
 
     nodeManager->setup();
     
-    info("End Setup Node...");
+    logger.info("End Setup Node...");
 }
 
 void initOdometry(RosNodeManager *nodeManager)
 {
-    info("Start Setup Odometry...");
+    logger.info("Start Setup Odometry...");
 
     odometryPublisher = new OdometryPublisher(
         nodeManager->getNode(), 
@@ -31,12 +31,12 @@ void initOdometry(RosNodeManager *nodeManager)
 
     odomPublishTime.setup();
 
-    info("End Setup Odometry...");
+    logger.info("End Setup Odometry...");
 }
 
 void initEncoders()
 {
-    info("Start Setup Encoders...");
+    logger.info("Start Setup Encoders...");
 
     // Inicializa el bus I2C principal del ESP32
     // Los pines SDA y SCL del ESP32 se conectan al multiplexor
@@ -45,7 +45,7 @@ void initEncoders()
 
     for (int i = 0; i < ENCODERS_COUNT; i++)
     {
-        info("Setup Encoder " + String(i) + "...");
+        logger.info("Setup Encoder " + String(i) + "...");
 
         selectI2CMuxChannel(i);
         delay(5);
@@ -59,7 +59,7 @@ void initEncoders()
         encoders[i]->begin();
     }
 
-    info("End Setup Encoders...");
+    logger.info("End Setup Encoders...");
 }
 
 void publishOdometry()
@@ -93,15 +93,19 @@ void onUpdate(short int id, int step, float w)
     switch (id) {
     case 0:
         robotW.fl = w;
+        // logger.debugPlot("w_fl", robotW.fl);
         break;
     case 1:
         robotW.fr = w;
+        // logger.debugPlot("w_fr", robotW.fr);
         break;
     case 2:
         robotW.bl = w;
+        // logger.debugPlot("w_bl", robotW.bl);
         break;
     case 3:
         robotW.br = w;
+        // logger.debugPlot("w_br", robotW.br);
         break;
     }
 }
@@ -111,20 +115,24 @@ void setup()
     // Setear la frecuencia de la CPU a 240 MHz (Máxima)
     setCpuFrequencyMhz(235);
 
-    initSerial(9600);
+    sleep(5);
 
-    info("Start Robot Odometry Setup...");
+    logger.info("Start Robot Odometry Setup...");
 
     initEncoders();
     initRosNode();
     initOdometry(nodeManager);
 
-    info("Finish Robot Odometry Setup...");
+    logger.info("Finish Robot Odometry Setup...");
+    logger.info("Publishing Robot Odometry...");
 }
 
 void loop()
 {
-    updateEncoders();
-    publishOdometry();
+    // Process incoming ROS messages and call callbacks
     nodeManager->update();
+
+    updateEncoders();
+
+    publishOdometry();
 }

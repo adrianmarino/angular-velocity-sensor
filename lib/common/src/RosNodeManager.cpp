@@ -20,7 +20,7 @@ RosNodeManager::RosNodeManager(
 
 void RosNodeManager::initWifi()
 {
-    info("Wait for wifi connection...");
+    logger.info("Wait for wifi connection...");
     connect_to_agent_via_wifi(
         wifi_ssid,
         wifi_pass,
@@ -65,7 +65,7 @@ void RosNodeManager::setup()
         )
     );
 
-    info("Connected to Ros2 Agent");
+    logger.info("Connected to Ros2 Agent");
 }
 
 

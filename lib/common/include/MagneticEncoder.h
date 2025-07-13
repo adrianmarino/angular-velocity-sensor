@@ -4,7 +4,7 @@
 #include <math.h>    // Necesario para abs()
 #include <AS5600Sensor.h>
 #include <WCalculator.h>
-#include <SerialUtils.h>
+#include <Logger.h>
 
 typedef void (*OnUpdateWEvent)(short int channel, int step, float w);
 
@@ -62,7 +62,7 @@ public:
     }
     else
     {
-      error("'" + String(channel) + "' encoder initialization fail.");
+      logger.error("'" + String(channel) + "' encoder initialization fail.");
       return false;
     }
   }
@@ -107,7 +107,7 @@ public:
       }
       else
       {
-        error("Cant read a value from " + String(channel) + " encoder.");
+        logger.error("Cant read a value from " + String(channel) + " encoder.");
       }
     }
   }

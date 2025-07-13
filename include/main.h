@@ -5,7 +5,7 @@
 #include <RobotOdometry.h>
 #include <OdometryPublisher.h>
 #include <RosNodeManager.h>
-#include <SerialUtils.h>
+#include <Logger.h>
 
 const String NODE_NAME = "robot_odometry";
 
@@ -13,7 +13,7 @@ const int I2C_SDA = 21;
 
 const int I2C_SCL = 22;
 
-const int SAMPLE_INTERVAL_MS = 20;
+const int SAMPLE_INTERVAL_MS = 50;
 
 const float EWMA_ALPHA = 0.8;
 

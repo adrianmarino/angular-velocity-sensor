@@ -1,5 +1,5 @@
 #include "timestamp.h"
-#include "SerialUtils.h"
+#include "Logger.h"
 
 void syncClockTimeStamp(const long utcOffsetInSeconds)
 {
@@ -16,7 +16,7 @@ void syncClockTimeStamp(const long utcOffsetInSeconds)
   // La función 'time(nullptr)' devuelve un timestamp Unix. Un valor válido es un número grande (> 10^9).
   // Si el tiempo no se sincroniza (por ejemplo, no hay internet), el bucle se podría quedar colgado.
   // Asegúrate de que el ESP32 tenga conexión a Internet para acceder al servidor NTP.
-  info("Waiting for NTP time synchronization");
+  logger.info("Waiting for NTP time synchronization");
   time_t now = 0;
   while (now < 1000000000)
   { // Un timestamp Unix válido es > 10^9 segundos
@@ -25,5 +25,5 @@ void syncClockTimeStamp(const long utcOffsetInSeconds)
     Serial.print(".");
   }
   Serial.println("");
-  info("NTP time synchronized.");
+  logger.info("NTP time synchronized.");
 }

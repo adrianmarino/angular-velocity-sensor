@@ -1,18 +1,18 @@
 #include "RosUtils.h"
-#include "SerialUtils.h"
+#include "Logger.h"
 
 void check(String msg)
 {
   while (1)
   {
-    error("Check: " + msg);
+    logger.error("Check: " + msg);
     delay(1000);
   }
 }
 
 void softCheck(String msg)
 {
-  error("Soft Check: " + msg);
+  logger.error("Soft Check: " + msg);
 }
 
 
@@ -35,24 +35,24 @@ void connect_to_agent_via_wifi(
   IPAddress ip;
   ip.fromString(agent_ip);
 
-  info("Set Micro Ros wifi transports...");
+  logger.info("Set Micro Ros wifi transports...");
   set_microros_wifi_transports(
       toCharArray(wifi_ssid),
       toCharArray(wifi_pass),
       ip,
       agent_port);
 
-  info("Wait for wifi connection...");
+  logger.info("Wait for wifi connection...");
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(100);
+    delay(100); 
     Serial.print(".");
   }
 
   if (WiFi.setTxPower(wifi_power))
-    info("Setup TX Power...");
+    logger.info("Setup TX Power...");
   else
-    error("TX Power: Setup error...");
+   logger. error("TX Power: Setup error...");
 
-  info("Wifi connection stablished...");
+  logger.info("Wifi connection stablished...");
 }
