@@ -62,7 +62,7 @@ public:
     }
     else
     {
-      logger.error("'" + String(channel) + "' encoder initialization fail.");
+      logger.error("Encoder '" + String(channel) + "': Initialization fail.");
       return false;
     }
   }
@@ -107,7 +107,7 @@ public:
       }
       else
       {
-        logger.error("Cant read a value from " + String(channel) + " encoder.");
+        logger.error("Encoder '" + String(channel) + "': Cant read a value.");
       }
     }
   }

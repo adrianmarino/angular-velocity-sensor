@@ -6,24 +6,34 @@
 #include <OdometryPublisher.h>
 #include <RosNodeManager.h>
 #include <Logger.h>
+//
+//
+//
+// ----------------------------------------------------------------------------
+// Configuration
+// ----------------------------------------------------------------------------
+// Setear la frecuencia de la CPU a 240 MHz (Máxima)
+const uint32_t CpuFreqMhz = 240;
 
-const String NODE_NAME = "robot_odometry";
+const String NodeName = "robot_odometry";
 
-const int I2C_SDA = 21;
+namespace I2C
+{
+    const int SdaPin = 21;
+    const int SclPin = 22;
+    const uint32_t BusFreq = 400000; // 400kHz para Fast Mode I2C
+}
 
-const int I2C_SCL = 22;
+namespace Encoder {
+    const int SampleIntervalMs = 50;
+    const float EWWMAAlpha = 0.8;
+    const short int Count = 4;
+}
 
-const int SAMPLE_INTERVAL_MS = 50;
-
-const float EWMA_ALPHA = 0.8;
-
-const uint32_t I2C_BUS_FREQ = 400000; // 400kHz para Fast Mode I2C
-
-const short int ENCODERS_COUNT = 4;
-
-const unsigned int UPDATE_INTERVAL_MS = 50;
-
-const String ODOMETRYY_TOPIC = "/robot_w";
+namespace Odometry {
+    const unsigned int UpdateIntervalMs = Encoder::SampleIntervalMs;
+    const String Topic = "/robot_w";
+}
 
 namespace RemoteMicroRosAgent
 {
@@ -38,17 +48,27 @@ namespace WifiEnergySavingMode
     const bool Enable = true;
     const bool Disable = false;
 }
-
+// ----------------------------------------------------------------------------
+//
+//
+//
+// ----------------------------------------------------------------------------
+// Global Variables
+// ----------------------------------------------------------------------------
 RosNodeManager *nodeManager;
 
 RobotW robotW = {0.0, 0.0, 0.0, 0.0};
 
-MagneticEncoder *encoders[ENCODERS_COUNT];
+MagneticEncoder *encoders[Encoder::Count];
 
 RobotOdometry robotOdometry;
 
-DeltaTimeComputer odomPublishTime(UPDATE_INTERVAL_MS);
+DeltaTimeComputer odomPublishTime(Odometry::UpdateIntervalMs);
 
 OdometryPublisher *odometryPublisher;
 
 I2CMultiplexor *multiplexor;
+// ----------------------------------------------------------------------------
+//
+//
+//

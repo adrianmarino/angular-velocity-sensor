@@ -4,19 +4,13 @@ void initRosNode()
 {
     logger.info("Start Setup Node...");
 
-    nodeManager = new RosNodeManager(
-        NODE_NAME,
+    nodeManager = (new RosNodeManager(
+        NodeName,
         RemoteMicroRosAgent::WifiSSID,
         RemoteMicroRosAgent::WifiPass,
         RemoteMicroRosAgent::IP,
         RemoteMicroRosAgent::Port,
-        WifiEnergySavingMode::Enable);
-
-    nodeManager->initWifi();
-
-    syncClockTimeStamp(AR_UTC_TIME_OFFSET_IN_SECONDS);
-
-    nodeManager->setup();
+        WifiEnergySavingMode::Enable))->setup();
     
     logger.info("End Setup Node...");
 }
@@ -27,7 +21,7 @@ void initOdometry(RosNodeManager *nodeManager)
 
     odometryPublisher = new OdometryPublisher(
         nodeManager->getNode(), 
-        ODOMETRYY_TOPIC);
+        Odometry::Topic);
 
     odomPublishTime.setup();
 
@@ -40,13 +34,13 @@ void initEncoders()
 
     // Inicializa el bus I2C principal del ESP32
     // Los pines SDA y SCL del ESP32 se conectan al multiplexor
-    Wire.begin(I2C_SDA, I2C_SCL);
-    Wire.setClock(I2C_BUS_FREQ);
+    Wire.begin(I2C::SdaPin, I2C::SclPin);
+    Wire.setClock(I2C::BusFreq);
 
     multiplexor = new I2CMultiplexor();
 
 
-    for (int i = 0; i < ENCODERS_COUNT; i++)
+    for (int i = 0; i < Encoder::Count; i++)
     {
         logger.info("Setup Encoder " + String(i) + "...");
 
@@ -56,8 +50,8 @@ void initEncoders()
         encoders[i] = new MagneticEncoder(
             onUpdate,
             i,
-            SAMPLE_INTERVAL_MS,
-            EWMA_ALPHA);
+            Encoder::SampleIntervalMs,
+            Encoder::EWWMAAlpha);
 
         encoders[i]->begin();
     }
@@ -82,7 +76,7 @@ void publishOdometry()
 
 void updateEncoders()
 {
-    for (int i = 0; i < ENCODERS_COUNT; i++)
+    for (int i = 0; i < Encoder::Count; i++)
     {
         MagneticEncoder *encoder = encoders[i];
         multiplexor->selectChannel(encoder->getChannel());
@@ -115,10 +109,7 @@ void onUpdate(short int id, int step, float w)
 
 void setup()
 {
-    // Setear la frecuencia de la CPU a 240 MHz (Máxima)
-    setCpuFrequencyMhz(235);
-
-    sleep(5);
+    setCpuFrequencyMhz(CpuFreqMhz);
 
     logger.info("Start Robot Odometry Setup...");
 
