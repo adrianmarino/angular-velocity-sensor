@@ -10,7 +10,8 @@ void initRosNode()
         RemoteMicroRosAgent::WifiPass,
         RemoteMicroRosAgent::IP,
         RemoteMicroRosAgent::Port,
-        WifiEnergySavingMode::Enable))->setup();
+        WifiEnergySavingMode::Disable,
+        WIFI_POWER_19dBm))->setup();
     
     logger.info("End Setup Node...");
 }
@@ -89,27 +90,29 @@ void onUpdate(short int id, int step, float w)
 {
     switch (id) {
     case 0:
-        robotW.fl = w;
-        // logger.debugPlot("w_fl", robotW.fl);
+        robotW.fr = w;
+        logger.debugPlot("w_fr", robotW.fr);
         break;
     case 1:
-        robotW.fr = w;
-        // logger.debugPlot("w_fr", robotW.fr);
+        robotW.br = w;
+        logger.debugPlot("w_br", robotW.br);
         break;
     case 2:
-        robotW.bl = w;
-        // logger.debugPlot("w_bl", robotW.bl);
+        robotW.bl = -w;
+        logger.debugPlot("w_bl", robotW.bl);
         break;
     case 3:
-        robotW.br = w;
-        // logger.debugPlot("w_br", robotW.br);
+        robotW.fl = -w;
+        logger.debugPlot("w_fl", robotW.fl);
         break;
     }
 }
 
 void setup()
 {
-    setCpuFrequencyMhz(CpuFreqMhz);
+    // setCpuFrequencyMhz(CpuFreqMhz);
+
+    // logger.setLevel(DEBUG);
 
     logger.info("Start Robot Odometry Setup...");
 
