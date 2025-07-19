@@ -2,26 +2,29 @@
 
 void initRosNode()
 {
-    logger.info("Start Setup Node...");
+    logger.info("Setup Node manager...");
 
     nodeManager = (new RosNodeManager(
-        NodeName,
-        RemoteMicroRosAgent::WifiSSID,
-        RemoteMicroRosAgent::WifiPass,
-        RemoteMicroRosAgent::IP,
-        RemoteMicroRosAgent::Port,
-        WifiEnergySavingMode::Disable,
-        WIFI_POWER_19dBm))->setup();
-    
+                       NodeManager::Name,
+                       RemoteMicroRosAgent::WifiSSID,
+                       RemoteMicroRosAgent::WifiPass,
+                       RemoteMicroRosAgent::IP,
+                       RemoteMicroRosAgent::Port,
+                       WifiEnergySavingMode::Disable,
+                       WIFI_POWER_19dBm))
+                      ->setup();
+
+    nodeManagerRestartHandler = new RosNodeManagerRestartHandler(nodeManager);
+
     logger.info("End Setup Node...");
 }
 
-void initOdometry(RosNodeManager *nodeManager)
+void initOdometry(rcl_node_t *node)
 {
     logger.info("Start Setup Odometry...");
 
     odometryPublisher = new OdometryPublisher(
-        nodeManager->getNode(), 
+        node,
         Odometry::Topic);
 
     odomPublishTime.setup();
@@ -39,7 +42,6 @@ void initEncoders()
     Wire.setClock(I2C::BusFreq);
 
     multiplexor = new I2CMultiplexor();
-
 
     for (int i = 0; i < Encoder::Count; i++)
     {
@@ -85,10 +87,10 @@ void updateEncoders()
     }
 }
 
-
 void onUpdate(short int id, int step, float w)
 {
-    switch (id) {
+    switch (id)
+    {
     case 0:
         robotW.fr = w;
         logger.debugPlot("w_fr", robotW.fr);
@@ -110,7 +112,7 @@ void onUpdate(short int id, int step, float w)
 
 void setup()
 {
-    // setCpuFrequencyMhz(CpuFreqMhz);
+    setCpuFrequencyMhz(CpuFreqMhz);
 
     // logger.setLevel(DEBUG);
 
@@ -118,7 +120,7 @@ void setup()
 
     initEncoders();
     initRosNode();
-    initOdometry(nodeManager);
+    initOdometry(nodeManager->getNode());
 
     logger.info("Finish Robot Odometry Setup...");
     logger.info("Publishing Robot Odometry...");
@@ -126,8 +128,7 @@ void setup()
 
 void loop()
 {
-    // Process incoming ROS messages and call callbacks
-    nodeManager->update();
+    nodeManagerRestartHandler->update();
 
     updateEncoders();
 
