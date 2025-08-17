@@ -12,7 +12,7 @@ void initRosNode()
                        RemoteMicroRosAgent::Port,
                        WifiEnergySavingMode::Disable,
                        WIFI_POWER_20_5dBm,
-                       false))
+                       true))
                       ->setup();
 
     nodeManagerRestartHandler = new RosNodeManagerRestartHandler(nodeManager);
