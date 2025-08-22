@@ -22,7 +22,7 @@ public:
         float bl,
         float br)
     {
-        leftW = -((fr + br) / 2.0f);
-        rightW = -((fl + bl) / 2.0f);
+        leftW = (fl + bl) / 2.0f;
+        rightW = (fr + br) / 2.0f;
     }
 };
