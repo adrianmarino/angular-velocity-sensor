@@ -46,7 +46,7 @@ namespace RemoteMicroRosAgent
 {
     const String WifiSSID = "RoboNet";
     const String WifiPass = "29042902";
-    const String IP = "192.168.1.30";
+    const String IP = "192.168.1.100";
     const uint16_t Port = 8888;
 }
 
