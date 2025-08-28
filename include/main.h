@@ -44,9 +44,9 @@ namespace Odometry
 
 namespace RemoteMicroRosAgent
 {
-    const String WifiSSID = "RoboNet";
-    const String WifiPass = "29042902";
-    const String IP = "192.168.1.100";
+    const String WifiSSID = "Zion24";
+    const String WifiPass = "lv3jg62904";
+    const String IP = "192.168.2.116";
     const uint16_t Port = 8888;
 }
 
@@ -55,6 +55,8 @@ namespace WifiEnergySavingMode
     const bool Enable = true;
     const bool Disable = false;
 }
+
+
 // ----------------------------------------------------------------------------
 //
 //
