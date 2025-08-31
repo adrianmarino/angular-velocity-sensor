@@ -1,5 +1,16 @@
+# 1 "/var/tmp/tmpa6tg0bmr"
+#include <Arduino.h>
+# 1 "/home/adrian/development/personal/angular-velocity-sensor/src/main.ino"
 #include "main.h"
-
+void initRosNode();
+void initOdometry(rcl_node_t *node);
+void initEncoders();
+void publishOdometry();
+void updateEncoders();
+void onUpdate(short int id, int step, float w);
+void setup();
+void loop();
+#line 3 "/home/adrian/development/personal/angular-velocity-sensor/src/main.ino"
 void initRosNode()
 {
     logger.info("Setup Node manager...");
@@ -37,8 +48,8 @@ void initEncoders()
 {
     logger.info("Start Setup Encoders...");
 
-    // Inicializa el bus I2C principal del ESP32
-    // Los pines SDA y SCL del ESP32 se conectan al multiplexor
+
+
     Wire.begin(I2C::SdaPin, I2C::SclPin);
     Wire.setClock(I2C::BusFreq);
 
@@ -115,7 +126,7 @@ void setup()
 {
     setCpuFrequencyMhz(CpuFreqMhz);
 
-    // logger.setLevel(DEBUG);
+
 
     logger.info("Start Robot Odometry Setup...");
 
@@ -126,10 +137,10 @@ void setup()
     logger.info("Finish Robot Odometry Setup...");
     logger.info("Publishing Robot Odometry...");
 
-    // Disable bluetooth
+
     btStop();
 
-    // Disable WiFi low consume
+
     WiFi.setSleep(false);
 }
 
