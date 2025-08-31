@@ -1,6 +1,6 @@
-# 1 "/tmp/tmpl0sbhbgl"
+# 1 "/var/tmp/tmpxqtz15yx"
 #include <Arduino.h>
-# 1 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
+# 1 "/home/adrian/development/personal/angular-velocity-sensor/src/main.ino"
 #include "main.h"
 void initRosNode();
 void initOdometry(rcl_node_t *node);
@@ -10,7 +10,7 @@ void updateEncoders();
 void onUpdate(short int id, int step, float w);
 void setup();
 void loop();
-#line 3 "/home/adrian/development/angular-velocity-sensor/src/main.ino"
+#line 3 "/home/adrian/development/personal/angular-velocity-sensor/src/main.ino"
 void initRosNode()
 {
     logger.info("Setup Node manager...");
@@ -136,6 +136,12 @@ void setup()
 
     logger.info("Finish Robot Odometry Setup...");
     logger.info("Publishing Robot Odometry...");
+
+
+    btStop();
+
+
+    WiFi.setSleep(false);
 }
 
 void loop()

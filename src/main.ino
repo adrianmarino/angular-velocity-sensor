@@ -125,6 +125,12 @@ void setup()
 
     logger.info("Finish Robot Odometry Setup...");
     logger.info("Publishing Robot Odometry...");
+
+    // Disable bluetooth
+    btStop();
+
+    // Disable WiFi low consume
+    WiFi.setSleep(false);
 }
 
 void loop()

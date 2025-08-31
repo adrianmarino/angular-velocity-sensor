@@ -14,7 +14,7 @@
 // Configuration
 // ----------------------------------------------------------------------------
 // Setear la frecuencia de la CPU a 240 MHz (Máxima)
-const uint32_t CpuFreqMhz = 240;
+const uint32_t CpuFreqMhz = 160;
 
 namespace NodeManager
 {
